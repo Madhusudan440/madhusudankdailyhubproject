@@ -1081,7 +1081,6 @@ h = h ? h : 12;
 h = h < 10 ? "0"+h : h;
 m = m < 10 ? "0"+m : m;
 s = s < 10 ? "0"+s : s;
-
 /* DATE */
 
 const months = [
@@ -1793,15 +1792,15 @@ correctLevel:QRCode.CorrectLevel.H
 
 function downloadQR(){
 
-let img =
-document.querySelector("#qrcode img");
-
 let canvas =
 document.querySelector("#qrcode canvas");
 
+let img =
+document.querySelector("#qrcode img");
+
 /* CHECK */
 
-if(!img && !canvas){
+if(!canvas && !img){
 
 alert("Generate QR First");
 return;
@@ -1813,20 +1812,20 @@ return;
 const a =
 document.createElement("a");
 
-/* IMAGE */
+/* CANVAS */
 
-if(img){
+if(canvas){
 
-a.href = img.src;
+a.href =
+canvas.toDataURL("image/png");
 
 }
 
-/* CANVAS */
+/* IMG */
 
 else{
 
-a.href =
-canvas.toDataURL();
+a.href = img.src;
 
 }
 
