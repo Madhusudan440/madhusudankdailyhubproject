@@ -677,7 +677,7 @@ Anekal, Karnataka
 
 <textarea
 id="chatInput"
-placeholder="Ask Gemini anything..."
+placeholder="Ask anything..."
 rows="3"
 ></textarea>
 
@@ -1283,7 +1283,7 @@ setAIStatus("🎤 Listening...");
 recognition.onresult = function(event){
 document.getElementById("chatInput").value =
 event.results[0][0].transcript;
-setAIStatus("✅ Voice captured. Press Ask Gemini.");
+setAIStatus("✅ Voice captured. Press Ask Response.");
 };
 
 recognition.onerror = function(){
