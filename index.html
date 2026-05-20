@@ -55,21 +55,6 @@ background:rgba(255,255,255,0.08);
 backdrop-filter:blur(15px);
 z-index:1000;
 }
-  /* VOICE NOTE */
-
-.voice-note{
-
-text-align:center;
-
-margin-top:30px;
-
-font-size:24px;
-
-font-weight:500;
-
-color:white;
-
-}
 
 .logo{
 font-size:28px;
@@ -338,6 +323,31 @@ padding:120px 8%;
 font-size:45px;
 text-align:center;
 margin-bottom:40px;
+}
+/* VOICE NOTE */
+
+.voice-note{
+
+width:100%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+margin-top:30px;
+
+font-size:24px;
+
+font-weight:500;
+
+color:white;
+
+padding:20px;
+
 }
 
 /* DASHBOARD */
@@ -660,7 +670,7 @@ Anekal, Karnataka
 <section class="section ai-section" id="gemini">
 
 <h2 class="ai-title">
-✨ Madhu AI Voice Assistant
+✨ MadhuMinds AI Voice Assistant
 </h2>
 
 <div class="tool-box glass ai-box">
@@ -678,7 +688,7 @@ rows="3"
 </button>
 
 <button onclick="askGemini()">
-✨ Ask Madhu
+✨ Ask Response
 </button>
 
 <button onclick="speakAIResponse()">
@@ -703,9 +713,10 @@ readonly
 </div>
 
 </section>
-<p class="voice-note">
-Note : Voice assistant is not working please explore other tools
-</p>
+<div class="voice-note">
+⚠️ Voice Assistant is currently unavailable.
+Please explore other smart tools available on the platform.
+</div>
 
 <!-- DASHBOARD -->
 
