@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madhusudan Smart Hub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:linear-gradient(135deg,#020617,#0f172a,#1e3a8a,#06b6d4);
+color:white;
+overflow-x:hidden;
+transition:0.4s;
+}
+
+body.dark{
+background:#000814;
+}
+
+::-webkit-scrollbar{
+width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+background:#00e5ff;
+border-radius:20px;
+}
+
+/* NAVBAR */
+
+nav{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+padding:16px 5%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+z-index:1000;
+}
+
+.logo{
+font-size:28px;
+font-weight:700;
+}
+
+.nav-right{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+#desktopMenu{
+display:flex;
+gap:18px;
+list-style:none;
+}
+
+#desktopMenu li a{
+color:white;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+}
+
+#desktopMenu li a:hover{
+color:#00e5ff;
+}
+
+.menu-btn{
+display:none;
+font-size:32px;
+cursor:pointer;
+}
+
+.toggle{
+width:45px;
+height:45px;
+border:none;
+border-radius:50%;
+cursor:pointer;
+font-size:18px;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+position:fixed;
+top:0;
+left:-260px;
+width:250px;
+height:100%;
+background:#0f172a;
+padding:40px 20px;
+display:flex;
+flex-direction:column;
+gap:25px;
+transition:0.4s;
+z-index:2000;
+}
+
+.sidebar a{
+color:white;
+text-decoration:none;
+font-size:20px;
+}
+
+.close-btn{
+font-size:28px;
+cursor:pointer;
+align-self:flex-end;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+padding:20px;
+}
+
+.hero h1{
+font-size:70px;
+text-shadow:0 0 20px cyan;
+}
+
+.hero p{
+font-size:22px;
+margin:20px 0;
+}
+
+.hero button{
+padding:15px 35px;
+border:none;
+border-radius:40px;
+background:#00e5ff;
+font-size:18px;
+font-weight:600;
+cursor:pointer;
+}
+
+/* GLASS */
+
+.glass{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+border-radius:25px;
+border:1px solid rgba(255,255,255,0.15);
+}
+
+/* PREMIUM CLOCK */
+
+.premium-clock{
+width:100%;
+max-width:950px;
+padding:35px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:40px;
+margin-top:40px;
+}
+
+.clock-left{
+flex:1;
+text-align:left;
+}
+
+.clock-left h1{
+font-size:75px;
+font-weight:700;
+text-shadow:0 0 25px cyan;
+}
+
+.clock-left p{
+font-size:24px;
+margin-top:15px;
+}
+
+.analog-clock{
+position:relative;
+width:260px;
+height:260px;
+border-radius:50%;
+background:#2f344d;
+border:5px solid rgba(255,255,255,0.15);
+box-shadow:
+0 0 25px rgba(0,255,255,0.25),
+inset 0 0 20px rgba(255,255,255,0.08);
+}
+
+.analog-clock span{
+position:absolute;
+inset:12px;
+text-align:center;
+transform:rotate(calc(30deg * var(--i)));
+}
+
+.analog-clock span b{
+display:inline-block;
+font-size:28px;
+font-weight:600;
+transform:rotate(calc(-30deg * var(--i)));
+}
+
+.center-dot{
+position:absolute;
+width:18px;
+height:18px;
+background:white;
+border-radius:50%;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:100;
+}
+
+.hour-hand,
+.minute-hand,
+.second-hand{
+position:absolute;
+bottom:50%;
+left:50%;
+transform-origin:bottom;
+transform:translateX(-50%);
+border-radius:20px;
+}
+
+.hour-hand{
+width:8px;
+height:65px;
+background:white;
+}
+
+.minute-hand{
+width:6px;
+height:90px;
+background:#00d9ff;
+}
+
+.second-hand{
+width:3px;
+height:105px;
+background:red;
+}
+
+/* AI SECTION */
+
+.ai-section{
+padding:120px 8%;
+}
+
+.ai-title{
+font-size:45px;
+text-align:center;
+margin-bottom:40px;
+}
+
+.ai-box{
+padding:30px;
+}
+
+.ai-box textarea{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+margin:12px 0;
+outline:none;
+font-size:16px;
+background:rgba(255,255,255,0.15);
+color:white;
+resize:vertical;
+min-height:100px;
+}
+
+.ai-box textarea::placeholder{
+color:rgba(255,255,255,0.5);
+}
+
+.ai-buttons{
+display:flex;
+flex-wrap:wrap;
+gap:12px;
+margin:10px 0;
+}
+
+.ai-status{
+margin-top:10px;
+font-size:13px;
+color:#00e5ff;
+min-height:20px;
+}
+
+/* SECTION */
+
+.section{
+padding:120px 8%;
+}
+
+.section h2{
+font-size:45px;
+text-align:center;
+margin-bottom:40px;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.card{
+padding:30px;
+border-radius:25px;
+text-align:center;
+transition:0.4s;
+cursor:pointer;
+}
+
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 0 30px rgba(0,255,255,0.5);
+}
+
+.card h3{
+margin-top:15px;
+font-size:24px;
+}
+
+.card p{
+margin-top:10px;
+line-height:1.8;
+}
+
+.icon{
+font-size:60px;
+}
+
+/* TOOL BOX */
+
+.tool-box{
+padding:30px;
+}
+
+input,
+textarea,
+select{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+margin:12px 0;
+outline:none;
+font-size:16px;
+}
+
+button{
+padding:12px 22px;
+border:none;
+border-radius:15px;
+cursor:pointer;
+font-weight:600;
+margin-top:10px;
+transition:0.3s;
+}
+
+button:hover{
+box-shadow:0 0 20px cyan;
+}
+
+/* WEATHER */
+
+.weather-card{
+max-width:420px;
+margin:auto;
+padding:30px;
+border-radius:30px;
+background:linear-gradient(135deg,#45f3c3,#5b5bd6);
+text-align:center;
+}
+
+.weather-search{
+display:flex;
+gap:15px;
+margin-bottom:40px;
+}
+
+.weather-search input{
+flex:1;
+border-radius:40px;
+}
+
+.weather-search button{
+width:60px;
+height:60px;
+border-radius:50%;
+}
+
+.temp{
+font-size:80px;
+font-weight:700;
+}
+
+.city-name{
+font-size:40px;
+margin-top:10px;
+}
+
+.weather-bottom{
+display:flex;
+justify-content:space-between;
+margin-top:40px;
+}
+
+/* TASK */
+
+.task{
+background:rgba(255,255,255,0.08);
+padding:15px;
+border-radius:15px;
+margin-top:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+}
+
+.completed{
+text-decoration:line-through;
+opacity:0.6;
+}
+
+/* QR */
+
+#qrcode{
+margin-top:20px;
+display:flex;
+justify-content:center;
+}
+
+/* FOOTER */
+
+footer{
+padding:30px;
+text-align:center;
+background:rgba(255,255,255,0.08);
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+#desktopMenu{
+display:none;
+}
+
+.menu-btn{
+display:block;
+}
+
+.hero h1{
+font-size:40px;
+}
+
+.hero p{
+font-size:16px;
+}
+
+.section{
+padding:100px 5%;
+}
+
+.dashboard{
+grid-template-columns:1fr;
+}
+
+.weather-bottom{
+flex-direction:column;
+gap:20px;
+}
+
+.clock-left h1{
+font-size:42px;
+}
+
+.premium-clock{
+flex-direction:column;
+text-align:center;
+}
+
+.clock-left{
+text-align:center;
+}
+
+.analog-clock{
+width:220px;
+height:220px;
+}
+
+.analog-clock span b{
+font-size:22px;
+}
+
+.ai-buttons{
+flex-direction:column;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+<div class="logo">SMART HUB</div>
+
+<ul id="desktopMenu">
+<li><a href="#weather">Weather</a></li>
+<li><a href="#planner">Planner</a></li>
+<li><a href="#translator">Translator</a></li>
+<li><a href="#qr">QR</a></li>
+<li><a href="#currency">Currency</a></li>
+<li><a href="#pdf">PDF</a></li>
+<li><a href="#about">About</a></li>
+</ul>
+
+<div class="nav-right">
+
+<button class="toggle" onclick="toggleMode()">
+🌙
+</button>
+
+<div class="menu-btn" onclick="openSidebar()">
+☰
+</div>
+
+</div>
+
+</nav>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar" id="sidebar">
+
+<div class="close-btn" onclick="closeSidebar()">
+✖
+</div>
+
+<a href="#weather">Weather</a>
+<a href="#planner">Planner</a>
+<a href="#translator">Translator</a>
+<a href="#qr">QR</a>
+<a href="#currency">Currency</a>
+<a href="#pdf">PDF</a>
+<a href="#about">About</a>
+
+</div>
+
+<!-- HERO -->
+
+<section class="hero">
+
+<h1>MADHUSUDAN SMART HUB</h1>
+
+<p>All Smart Daily Tools in One Platform</p>
+
+<button onclick="document.getElementById('dashboard').scrollIntoView()">
+Explore Tools
+</button>
+
+<div class="premium-clock glass">
+
+<div class="clock-left">
+
+<h1 id="digitalClock">
+00:00:00 AM
+</h1>
+
+
+<p>
+Anekal, Karnataka
+</p>
+
+</div>
+
+<div class="analog-clock">
+
+<div class="center-dot"></div>
+
+<div class="hour-hand" id="hourHand"></div>
+
+<div class="minute-hand" id="minuteHand"></div>
+
+<div class="second-hand" id="secondHand"></div>
+
+<span style="--i:1"><b>1</b></span>
+<span style="--i:2"><b>2</b></span>
+<span style="--i:3"><b>3</b></span>
+<span style="--i:4"><b>4</b></span>
+<span style="--i:5"><b>5</b></span>
+<span style="--i:6"><b>6</b></span>
+<span style="--i:7"><b>7</b></span>
+<span style="--i:8"><b>8</b></span>
+<span style="--i:9"><b>9</b></span>
+<span style="--i:10"><b>10</b></span>
+<span style="--i:11"><b>11</b></span>
+<span style="--i:12"><b>12</b></span>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- GEMINI AI -->
+
+<section class="section ai-section" id="gemini">
+
+<h2 class="ai-title">
+✨ Gemini AI Voice Assistant
+</h2>
+
+<div class="tool-box glass ai-box">
+
+<textarea
+id="chatInput"
+placeholder="Ask Gemini anything..."
+rows="3"
+></textarea>
+
+<div class="ai-buttons">
+
+<button onclick="startVoiceInput()">
+🎤 Voice Input
+</button>
+
+<button onclick="askGemini()">
+✨ Ask Gemini
+</button>
+
+<button onclick="speakAIResponse()">
+🔊 Speak Response
+</button>
+
+<button onclick="stopAIResponse()">
+⛔ Stop
+</button>
+
+</div>
+
+<div class="ai-status" id="aiStatus"></div>
+
+<textarea
+id="chatOutput"
+placeholder="AI response will appear here..."
+rows="6"
+readonly
+></textarea>
+
+</div>
+
+</section>
+
+<!-- DASHBOARD -->
+
+<section class="section" id="dashboard">
+
+<h2>Smart Dashboard</h2>
+
+<div class="dashboard">
+
+<div class="card glass">
+<div class="icon">🌦️</div>
+<h3>Weather</h3>
+<p>Live weather updates.</p>
+</div>
+
+<div class="card glass">
+<div class="icon">📅</div>
+<h3>Planner</h3>
+<p>Daily task manager.</p>
+</div>
+
+<div class="card glass">
+<div class="icon">🌍</div>
+<h3>Translator</h3>
+<p>Translate instantly.</p>
+</div>
+
+<div class="card glass">
+<div class="icon">🔳</div>
+<h3>QR Generator</h3>
+<p>Create QR codes.</p>
+</div>
+
+<div class="card glass">
+<div class="icon">💱</div>
+<h3>Currency</h3>
+<p>Convert currencies.</p>
+</div>
+
+<div class="card glass">
+<div class="icon">📄</div>
+<h3>PDF Tools</h3>
+<p>PDF conversions.</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- WEATHER -->
+
+<section class="section" id="weather">
+
+<h2>Weather Forecast</h2>
+
+<div class="weather-search">
+
+<input
+type="text"
+id="city"
+list="cities"
+placeholder="Search city..."
+>
+
+<datalist id="cities">
+<option value="Bengaluru">
+<option value="Hyderabad">
+<option value="Chennai">
+<option value="Mumbai">
+<option value="Delhi">
+<option value="Mysuru">
+<option value="London">
+<option value="Tokyo">
+</datalist>
+
+<button onclick="getWeather()">🔍</button>
+
+</div>
+
+<div id="weatherResult"></div>
+
+</section>
+
+<!-- PLANNER -->
+
+<section class="section" id="planner">
+
+<h2>Daily Planner</h2>
+
+<div class="tool-box glass">
+
+<input type="text" id="taskInput" placeholder="Add task">
+
+<button onclick="addTask()">Add Task</button>
+
+<div id="taskList"></div>
+
+</div>
+
+</section>
+
+<!-- TRANSLATOR -->
+
+<section class="section" id="translator">
+
+<h2>AI Translator</h2>
+
+<div class="tool-box glass">
+
+<textarea id="inputText" placeholder="Enter text"></textarea>
+
+<select id="fromLang">
+<option value="en">English</option>
+<option value="hi">Hindi</option>
+<option value="kn">Kannada</option>
+<option value="ta">Tamil</option>
+<option value="te">Telugu</option>
+<option value="ml">Malayalam</option>
+<option value="fr">French</option>
+<option value="de">German</option>
+<option value="ja">Japanese</option>
+<option value="es">Spanish</option>
+</select>
+
+<select id="toLang">
+<option value="hi">Hindi</option>
+<option value="en">English</option>
+<option value="kn">Kannada</option>
+<option value="ta">Tamil</option>
+<option value="te">Telugu</option>
+<option value="ml">Malayalam</option>
+<option value="fr">French</option>
+<option value="de">German</option>
+<option value="ja">Japanese</option>
+<option value="es">Spanish</option>
+</select>
+
+<button onclick="translateText()">Translate</button>
+
+<button onclick="speakInput()">
+🔊 Speak Input
+</button>
+
+<button onclick="speakOutput()">🔊 Speak Output</button>
+
+<textarea id="outputText" placeholder="Translated text"></textarea>
+
+</div>
+
+</section>
+
+<!-- TEXT TO SPEECH -->
+
+<section class="section">
+
+<h2>Text To Speech Converter</h2>
+
+<div class="tool-box glass">
+
+<textarea
+id="ttsText"
+placeholder="Enter text to speak..."
+></textarea>
+
+<select id="ttsLanguage">
+
+<option value="en-US">English US</option>
+<option value="hi-IN">Hindi India</option>
+<option value="ja-JP">Japanese</option>
+<option value="ko-KR">Korean</option>
+<option value="de-DE">German</option>
+
+</select>
+
+<select id="voiceSelect"></select>
+
+<button onclick="startSpeech()">Speak</button>
+
+<button onclick="stopSpeech()">Stop</button>
+
+</div>
+
+</section>
+
+<!-- QR -->
+
+<section class="section" id="qr">
+
+<h2>QR Generator</h2>
+
+<div class="tool-box glass">
+
+<input type="text" id="qrText" placeholder="Enter text or link">
+
+<button onclick="generateQR()">Generate QR</button>
+
+<button onclick="downloadQR()">Download QR</button>
+
+<div id="qrcode"></div>
+
+</div>
+
+</section>
+
+<!-- CURRENCY -->
+
+<section class="section" id="currency">
+
+<h2>Currency Converter</h2>
+
+<div class="tool-box glass">
+
+<input type="number" id="amount" placeholder="Amount">
+
+<select id="fromCurrency">
+<option value="USD">USD</option>
+<option value="INR">INR</option>
+<option value="EUR">EUR</option>
+<option value="GBP">GBP</option>
+<option value="JPY">JPY</option>
+<option value="AED">AED</option>
+<option value="CAD">CAD</option>
+<option value="AUD">AUD</option>
+</select>
+
+<select id="toCurrency">
+<option value="INR">INR</option>
+<option value="USD">USD</option>
+<option value="EUR">EUR</option>
+<option value="GBP">GBP</option>
+<option value="JPY">JPY</option>
+<option value="AED">AED</option>
+<option value="CAD">CAD</option>
+<option value="AUD">AUD</option>
+</select>
+
+<button onclick="convertCurrency()">Convert</button>
+
+<h3 id="currencyResult"></h3>
+
+</div>
+
+</section>
+
+<!-- PDF -->
+
+<section class="section" id="pdf">
+
+<h2>PDF Tools</h2>
+
+<div class="tool-box glass">
+
+<input type="file" id="pdfFile">
+
+<button onclick="imageToPDF()">Image to PDF</button>
+
+<button onclick="pdfToImage()">PDF to Image</button>
+
+</div>
+
+</section>
+
+<!-- ABOUT -->
+
+<section class="section" id="about">
+
+<h2>About Developer</h2>
+
+<div class="tool-box glass">
+
+<h1>Madhusudan K</h1>
+
+<p style="margin-top:20px;line-height:2;">
+Full Stack Developer passionate about modern web applications,
+AI tools and responsive UI design.
+</p>
+
+<p style="margin-top:20px;">
+Skills:
+HTML, CSS, JavaScript, MERN Stack, Python Full Stack
+</p>
+
+<p style="margin-top:20px;">
+Location:
+Karnataka, India
+</p>
+
+</div>
+
+</section>
+
+<footer>
+
+<h3>Created by Madhusudan © 2026</h3>
+
+</footer>
+
+<script>
+
+/* ================= SIDEBAR ================= */
+
+function openSidebar(){
+document.getElementById("sidebar").style.left="0";
+}
+
+function closeSidebar(){
+document.getElementById("sidebar").style.left="-260px";
+}
+
+/* ================= DARK MODE ================= */
+
+function toggleMode(){
+document.body.classList.toggle("dark");
+}
+
+/* ================= CLOCK ================= */
+
+function updateClock(){
+
+const now = new Date();
+
+let h = now.getHours();
+let m = now.getMinutes();
+let s = now.getSeconds();
+
+
+let ampm = h >= 12 ? "PM" : "AM";
+
+h = h % 12;
+h = h ? h : 12;
+
+h = h < 10 ? "0"+h : h;
+m = m < 10 ? "0"+m : m;
+s = s < 10 ? "0"+s : s;
+
+/* DATE */
+
+const months = [
+
+"January",
+"February",
+"March",
+"April",
+"May",
+"June",
+"July",
+"August",
+"September",
+"October",
+"November",
+"December"
+
+];
+
+const days = [
+
+"Sunday",
+"Monday",
+"Tuesday",
+"Wednesday",
+"Thursday",
+"Friday",
+"Saturday"
+
+];
+
+let currentDate =
+
+`${days[now.getDay()]},
+${now.getDate()}
+${months[now.getMonth()]}
+${now.getFullYear()}`;
+
+/* SHOW TIME + DATE */
+
+document.getElementById("digitalClock").innerHTML =
+
+`${h}:${m}:${s} ${ampm}
+
+<br>
+
+<span style="
+font-size:22px;
+display:block;
+margin-top:10px;
+color:#cbd5e1;
+">
+
+${currentDate}
+
+</span>
+
+`;
+
+const hour = now.getHours() % 12;
+
+const hourDeg =
+(hour * 30) + (now.getMinutes() * 0.5);
+
+const minuteDeg =
+(now.getMinutes() * 6) + (now.getSeconds() * 0.1);
+
+const secondDeg =
+now.getSeconds() * 6;
+
+document.getElementById("hourHand").style.transform =
+`translateX(-50%) rotate(${hourDeg}deg)`;
+
+document.getElementById("minuteHand").style.transform =
+`translateX(-50%) rotate(${minuteDeg}deg)`;
+
+document.getElementById("secondHand").style.transform =
+`translateX(-50%) rotate(${secondDeg}deg)`;
+
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ================= GEMINI AI (FIXED) ================= */
+
+function setAIStatus(msg){
+document.getElementById("aiStatus").textContent = msg;
+}
+
+async function askGemini(){
+
+let input =
+document.getElementById("chatInput").value.trim();
+
+if(input === ""){
+alert("Enter a question first!");
+return;
+}
+
+document.getElementById("chatOutput").value = "Thinking...";
+setAIStatus("⏳ Connecting to Gemini...");
+
+try{
+
+/* Calls Python Flask backend — not Gemini directly */
+const response = await fetch("http://127.0.0.1:5000/chat", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ message: input })
+});
+
+if(!response.ok){
+const err = await response.json();
+document.getElementById("chatOutput").value =
+"Server Error: " + (err.error || response.status);
+setAIStatus("❌ Server returned an error.");
+return;
+}
+
+const data = await response.json();
+
+if(data.reply){
+document.getElementById("chatOutput").value = data.reply;
+setAIStatus("✅ Response received.");
+}
+else if(data.error){
+document.getElementById("chatOutput").value =
+"Error: " + data.error;
+setAIStatus("❌ Gemini error.");
+}
+else{
+document.getElementById("chatOutput").value =
+"No response received.";
+setAIStatus("⚠️ Empty response.");
+}
+
+}
+catch(error){
+
+console.error(error);
+
+document.getElementById("chatOutput").value =
+"❌ Cannot connect to backend.\n\nMake sure:\n1. app.py is running (python app.py)\n2. Backend URL is http://127.0.0.1:5000/chat\n3. flask and flask-cors are installed";
+
+setAIStatus("❌ Backend not connected.");
+
+}
+
+}
+
+/* ================= VOICE INPUT ================= */
+
+function startVoiceInput(){
+
+const SpeechRec =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+if(!SpeechRec){
+alert("Voice input not supported in this browser.");
+return;
+}
+
+let recognition = new SpeechRec();
+recognition.lang = "en-US";
+recognition.start();
+
+setAIStatus("🎤 Listening...");
+
+recognition.onresult = function(event){
+document.getElementById("chatInput").value =
+event.results[0][0].transcript;
+setAIStatus("✅ Voice captured. Press Ask Gemini.");
+};
+
+recognition.onerror = function(){
+setAIStatus("❌ Voice input failed. Try again.");
+};
+
+}
+
+/* ================= SPEAK RESPONSE ================= */
+
+function speakAIResponse(){
+
+speechSynthesis.cancel();
+
+let text =
+document.getElementById("chatOutput").value;
+
+if(text.trim() === "" || text === "Thinking..."){
+alert("No AI response to speak yet.");
+return;
+}
+
+let speech = new SpeechSynthesisUtterance(text);
+speech.lang = "en-US";
+speech.rate = 1;
+speech.pitch = 1;
+speech.volume = 1;
+
+speech.onstart = () => setAIStatus("🔊 Speaking...");
+speech.onend   = () => setAIStatus("✅ Done speaking.");
+
+setTimeout(()=>{
+window.speechSynthesis.speak(speech);
+}, 100);
+
+}
+
+/* ================= STOP AI RESPONSE ================= */
+
+function stopAIResponse(){
+speechSynthesis.cancel();
+setAIStatus("⛔ Stopped.");
+}
+
+/* ================= WEATHER ================= */
+
+async function getWeather(){
+
+let city =
+document.getElementById("city").value;
+
+let apiUrl =
+`https://api.weatherapi.com/v1/current.json?key=594a24f4fe754a9a9be34639262005&q=${city}&aqi=yes`;
+
+let res = await fetch(apiUrl);
+let data = await res.json();
+
+console.log(data);
+
+let icon = "☀️";
+
+if(data.current.condition.text.includes("Cloud"))
+icon = "☁️";
+
+if(data.current.condition.text.includes("Rain"))
+icon = "🌧️";
+
+document.getElementById("weatherResult").innerHTML = `
+
+<div class="weather-card">
+
+<div style="font-size:80px">
+${icon}
+</div>
+
+<h1 class="temp">
+${Math.round(data.current.temp_c)}°C
+</h1>
+
+<h2 class="city-name">
+${data.location.name}
+</h2>
+
+<div class="weather-bottom">
+
+<div>
+<h2>${data.current.humidity}%</h2>
+<p>Humidity</p>
+</div>
+
+<div>
+<h2>${data.current.wind_kph} km/h</h2>
+<p>Wind Speed</p>
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+/* ================= PLANNER ================= */
+
+function addTask(){
+
+let input =
+document.getElementById("taskInput");
+
+if(input.value === "") return;
+
+let div = document.createElement("div");
+div.className = "task";
+
+div.innerHTML = `
+<span>${input.value}</span>
+<div>
+<button onclick="completeTask(this)">Completed</button>
+<button onclick="deleteTask(this)">Delete</button>
+</div>
+`;
+
+document.getElementById("taskList").appendChild(div);
+
+saveTasks();
+
+input.value = "";
+
+}
+
+function completeTask(btn){
+btn.parentElement.parentElement
+.classList.toggle("completed");
+saveTasks();
+}
+
+function deleteTask(btn){
+btn.parentElement.parentElement.remove();
+saveTasks();
+}
+
+function saveTasks(){
+localStorage.setItem(
+"tasks",
+document.getElementById("taskList").innerHTML
+);
+}
+
+window.onload = function(){
+if(localStorage.getItem("tasks")){
+document.getElementById("taskList").innerHTML =
+localStorage.getItem("tasks");
+}
+}
+
+/* ================= TRANSLATOR ================= */
+
+async function translateText(){
+
+let text =
+document.getElementById("inputText").value;
+
+let from =
+document.getElementById("fromLang").value;
+
+let to =
+document.getElementById("toLang").value;
+
+let res = await fetch(
+`https://api.mymemory.translated.net/get?q=${text}&langpair=${from}|${to}`
+);
+
+let data = await res.json();
+
+document.getElementById("outputText").value =
+data.responseData.translatedText;
+
+}
+
+function speakInput(){
+
+speechSynthesis.cancel();
+
+let text =
+document.getElementById("inputText").value;
+
+if(text.trim() === "") return;
+
+let speech = new SpeechSynthesisUtterance(text);
+
+let fromLang =
+document.getElementById("fromLang").value;
+
+const langMap = {
+en:"en-US",
+hi:"hi-IN",
+kn:"kn-IN",
+ta:"ta-IN",
+te:"te-IN",
+ml:"ml-IN",
+fr:"fr-FR",
+de:"de-DE",
+ja:"ja-JP",
+es:"es-ES"
+};
+
+speech.lang = langMap[fromLang] || "en-US";
+
+let voices = speechSynthesis.getVoices();
+
+let matchedVoice =
+voices.find(v => v.lang === speech.lang);
+
+if(matchedVoice){
+speech.voice = matchedVoice;
+}
+
+speech.rate = 1;
+speech.pitch = 1;
+speech.volume = 1;
+
+speechSynthesis.speak(speech);
+
+}
+
+function speakOutput(){
+
+speechSynthesis.cancel();
+
+let text =
+document.getElementById("outputText").value;
+
+if(text.trim() === "") return;
+
+let speech = new SpeechSynthesisUtterance(text);
+
+speech.lang =
+document.getElementById("toLang").value;
+
+speech.rate = 1;
+speech.pitch = 1;
+
+speechSynthesis.speak(speech);
+
+}
+
+/* ================= TEXT TO SPEECH ================= */
+
+let allVoices = [];
+let filteredVoices = [];
+
+function loadVoices(){
+allVoices = speechSynthesis.getVoices();
+updateVoiceList();
+}
+
+speechSynthesis.onvoiceschanged = loadVoices;
+
+function updateVoiceList(){
+
+let lang =
+document.getElementById("ttsLanguage").value;
+
+let voiceSelect =
+document.getElementById("voiceSelect");
+
+voiceSelect.innerHTML = "";
+
+filteredVoices =
+allVoices.filter(v => v.lang === lang);
+
+filteredVoices = filteredVoices.slice(0, 10);
+
+filteredVoices.forEach((voice, index) => {
+
+let option = document.createElement("option");
+
+let gender = index % 2 === 0 ? "Male" : "Female";
+
+option.value = index;
+option.text = `${voice.name} - ${gender}`;
+
+voiceSelect.appendChild(option);
+
+});
+
+}
+
+document.getElementById("ttsLanguage")
+.addEventListener("change", () => {
+speechSynthesis.cancel();
+updateVoiceList();
+});
+
+function startSpeech(){
+
+speechSynthesis.cancel();
+
+let text =
+document.getElementById("ttsText").value;
+
+if(text.trim() === "") return;
+
+let speech = new SpeechSynthesisUtterance(text);
+
+let selectedVoice =
+filteredVoices[
+document.getElementById("voiceSelect").value
+];
+
+if(selectedVoice){
+speech.voice = selectedVoice;
+speech.lang = selectedVoice.lang;
+}
+
+speech.rate = 1;
+speech.pitch = 1;
+speech.volume = 1;
+
+speechSynthesis.speak(speech);
+
+}
+
+function stopSpeech(){
+speechSynthesis.cancel();
+}
+
+/* ================= QR GENERATOR ================= */
+
+function generateQR(){
+
+document.getElementById("qrcode").innerHTML = '';
+
+new QRCode(document.getElementById("qrcode"), {
+text: document.getElementById("qrText").value,
+width: 200,
+height: 200
+});
+
+}
+
+function downloadQR(){
+
+let img =
+document.querySelector("#qrcode img");
+
+if(!img){
+alert("Generate QR First");
+return;
+}
+
+fetch(img.src)
+.then(res => res.blob())
+.then(blob => {
+
+const url =
+window.URL.createObjectURL(blob);
+
+const a = document.createElement("a");
+a.href = url;
+a.download = "qr-code.png";
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+});
+
+}
+
+/* ================= CURRENCY CONVERTER ================= */
+
+async function convertCurrency(){
+
+let amount =
+document.getElementById("amount").value;
+
+let from =
+document.getElementById("fromCurrency").value;
+
+let to =
+document.getElementById("toCurrency").value;
+
+let res = await fetch(
+`https://api.exchangerate-api.com/v4/latest/${from}`
+);
+
+let data = await res.json();
+
+let rate = data.rates[to];
+
+let result = (amount * rate).toFixed(2);
+
+document.getElementById("currencyResult").innerHTML =
+`${amount} ${from} = ${result} ${to}`;
+
+}
+
+/* ================= IMAGE TO PDF ================= */
+
+async function imageToPDF(){
+
+const file =
+document.getElementById("pdfFile").files[0];
+
+if(!file){
+alert("Upload image first");
+return;
+}
+
+const reader = new FileReader();
+
+reader.readAsDataURL(file);
+
+reader.onload = function(){
+
+const { jsPDF } = window.jspdf;
+
+const pdf = new jsPDF();
+
+pdf.addImage(
+reader.result,
+'JPEG',
+10,
+10,
+180,
+160
+);
+
+pdf.save("image-to-pdf.pdf");
+
+};
+
+}
+
+/* ================= PDF TO IMAGE ================= */
+
+async function pdfToImage(){
+
+const file =
+document.getElementById("pdfFile").files[0];
+
+if(!file){
+alert("Upload PDF first");
+return;
+}
+
+const fileURL = URL.createObjectURL(file);
+
+window.open(fileURL);
+
+alert("PDF opened. Take screenshot or use browser save.");
+
+}
+
+</script>
+
+</body>
+</html>
