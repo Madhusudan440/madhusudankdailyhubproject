@@ -847,26 +847,85 @@ placeholder="Search city..."
 
 <div class="tool-box glass">
 
+<div class="input-wrapper">
+
 <textarea
 id="ttsText"
 placeholder="Enter text to speak..."
 ></textarea>
 
+
+</div>
+
+<!-- LANGUAGE -->
+
 <select id="ttsLanguage">
 
-<option value="en-US">English US</option>
-<option value="hi-IN">Hindi India</option>
-<option value="ja-JP">Japanese</option>
-<option value="ko-KR">Korean</option>
-<option value="de-DE">German</option>
+<option value="en-US">
+English US
+</option>
+
+<option value="hi-IN">
+Hindi India
+</option>
+
+<option value="kn-IN">
+Kannada India
+</option>
+
+<option value="ta-IN">
+Tamil India
+</option>
+
+<option value="te-IN">
+Telugu India
+</option>
+
+<option value="ml-IN">
+Malayalam India
+</option>
+
+<option value="ja-JP">
+Japanese
+</option>
+
+<option value="ko-KR">
+Korean
+</option>
+
+<option value="de-DE">
+German
+</option>
 
 </select>
 
-<select id="voiceSelect"></select>
+<!-- VOICE -->
 
-<button onclick="startSpeech()">Speak</button>
+<select id="voiceSelect">
 
-<button onclick="stopSpeech()">Stop</button>
+<option value="male">
+Male Voice
+</option>
+
+<option value="female">
+Female Voice
+</option>
+
+</select>
+
+<!-- BUTTONS -->
+
+<div class="btn-group">
+
+<button onclick="startSpeech()">
+🔊 Speak
+</button>
+
+<button onclick="stopSpeech()">
+⛔ Stop
+</button>
+
+</div>
 
 </div>
 
@@ -1449,12 +1508,25 @@ speechSynthesis.speak(speech);
 let allVoices = [];
 let filteredVoices = [];
 
+/* LOAD VOICES */
+
 function loadVoices(){
-allVoices = speechSynthesis.getVoices();
+
+allVoices =
+speechSynthesis.getVoices();
+
 updateVoiceList();
+
 }
 
-speechSynthesis.onvoiceschanged = loadVoices;
+/* LOAD */
+
+speechSynthesis.onvoiceschanged =
+loadVoices;
+
+loadVoices();
+
+/* UPDATE VOICE LIST */
 
 function updateVoiceList(){
 
@@ -1464,21 +1536,97 @@ document.getElementById("ttsLanguage").value;
 let voiceSelect =
 document.getElementById("voiceSelect");
 
+/* CLEAR OLD */
+
 voiceSelect.innerHTML = "";
 
+/* FILTER LANGUAGES */
+
 filteredVoices =
-allVoices.filter(v => v.lang === lang);
+allVoices.filter(v =>
 
-filteredVoices = filteredVoices.slice(0, 10);
+v.lang.toLowerCase().startsWith(
 
-filteredVoices.forEach((voice, index) => {
+lang.split("-")[0].toLowerCase()
 
-let option = document.createElement("option");
+)
 
-let gender = index % 2 === 0 ? "Male" : "Female";
+);
+
+/* FALLBACK */
+
+if(filteredVoices.length === 0){
+
+filteredVoices = allVoices;
+
+}
+
+/* MALE VOICE */
+
+let maleVoice =
+filteredVoices.find(v =>
+
+v.name.toLowerCase().includes("male") ||
+
+v.name.toLowerCase().includes("david") ||
+
+v.name.toLowerCase().includes("mark") ||
+
+v.name.toLowerCase().includes("ravi")
+
+);
+
+/* FEMALE VOICE */
+
+let femaleVoice =
+filteredVoices.find(v =>
+
+v.name.toLowerCase().includes("female") ||
+
+v.name.toLowerCase().includes("zira") ||
+
+v.name.toLowerCase().includes("heera") ||
+
+v.name.toLowerCase().includes("susan")
+
+);
+
+/* DEFAULT */
+
+if(!maleVoice){
+
+maleVoice = filteredVoices[0];
+
+}
+
+if(!femaleVoice){
+
+femaleVoice =
+filteredVoices[1] ||
+filteredVoices[0];
+
+}
+
+/* FINAL LIST */
+
+filteredVoices = [
+maleVoice,
+femaleVoice
+];
+
+/* ADD OPTIONS */
+
+filteredVoices.forEach((voice,index)=>{
+
+let option =
+document.createElement("option");
 
 option.value = index;
-option.text = `${voice.name} - ${gender}`;
+
+option.text =
+index === 0
+? "Male Voice"
+: "Female Voice";
 
 voiceSelect.appendChild(option);
 
@@ -1486,58 +1634,111 @@ voiceSelect.appendChild(option);
 
 }
 
-document.getElementById("ttsLanguage")
-.addEventListener("change", () => {
-speechSynthesis.cancel();
+/* LANGUAGE CHANGE */
+
+document
+.getElementById("ttsLanguage")
+.addEventListener("change",()=>{
+
+window.speechSynthesis.cancel();
+
 updateVoiceList();
+
 });
+
+/* START SPEECH */
 
 function startSpeech(){
 
-speechSynthesis.cancel();
+/* STOP OLD */
+
+window.speechSynthesis.cancel();
 
 let text =
 document.getElementById("ttsText").value;
 
-if(text.trim() === "") return;
+if(text.trim()===""){
 
-let speech = new SpeechSynthesisUtterance(text);
+alert("Enter text");
+return;
+
+}
+
+/* CREATE */
+
+let speech =
+new SpeechSynthesisUtterance(text);
+
+/* LANGUAGE */
+
+let language =
+document.getElementById("ttsLanguage").value;
+
+speech.lang = language;
+
+/* SELECTED VOICE */
 
 let selectedVoice =
 filteredVoices[
 document.getElementById("voiceSelect").value
 ];
 
+/* APPLY */
+
 if(selectedVoice){
+
 speech.voice = selectedVoice;
-speech.lang = selectedVoice.lang;
+
 }
+
+/* FALLBACK */
+
+else{
+
+let fallbackVoice =
+allVoices.find(v =>
+
+v.lang.toLowerCase().startsWith(
+
+language.split("-")[0].toLowerCase()
+
+)
+
+);
+
+if(fallbackVoice){
+
+speech.voice = fallbackVoice;
+
+}
+
+}
+
+/* SETTINGS */
 
 speech.rate = 1;
 speech.pitch = 1;
 speech.volume = 1;
 
-speechSynthesis.speak(speech);
+/* FAST SWITCH */
+
+setTimeout(()=>{
+
+window.speechSynthesis.speak(speech);
+
+},50);
 
 }
+
+/* STOP */
 
 function stopSpeech(){
-speechSynthesis.cancel();
-}
 
-/* ================= QR GENERATOR ================= */
-
-function generateQR(){
-
-document.getElementById("qrcode").innerHTML = '';
-
-new QRCode(document.getElementById("qrcode"), {
-text: document.getElementById("qrText").value,
-width: 200,
-height: 200
-});
+window.speechSynthesis.cancel();
 
 }
+
+/* DOWNLOAD QR */
 
 function downloadQR(){
 
@@ -1545,28 +1746,28 @@ let img =
 document.querySelector("#qrcode img");
 
 if(!img){
+
 alert("Generate QR First");
 return;
+
 }
 
-fetch(img.src)
-.then(res => res.blob())
-.then(blob => {
+/* CREATE DOWNLOAD */
 
-const url =
-window.URL.createObjectURL(blob);
+const a =
+document.createElement("a");
 
-const a = document.createElement("a");
-a.href = url;
+a.href = img.src;
+
 a.download = "qr-code.png";
-document.body.appendChild(a);
-a.click();
-a.remove();
 
-});
+document.body.appendChild(a);
+
+a.click();
+
+document.body.removeChild(a);
 
 }
-
 /* ================= CURRENCY CONVERTER ================= */
 
 async function convertCurrency(){
