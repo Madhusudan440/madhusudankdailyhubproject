@@ -1738,6 +1738,57 @@ window.speechSynthesis.cancel();
 
 }
 
+/* ================= QR GENERATOR ================= */
+
+/* GENERATE QR */
+
+function generateQR(){
+
+let text =
+document.getElementById("qrText").value;
+
+if(text.trim()===""){
+
+alert("Enter text or link");
+return;
+
+}
+
+/* QR BOX */
+
+let qrBox =
+document.getElementById("qrcode");
+
+/* CLEAR OLD */
+
+qrBox.innerHTML = "";
+
+/* CREATE NEW QR */
+
+new QRCode(
+
+qrBox,
+
+{
+
+text:text,
+
+width:220,
+
+height:220,
+
+colorDark:"#000000",
+
+colorLight:"#ffffff",
+
+correctLevel:QRCode.CorrectLevel.H
+
+}
+
+);
+
+}
+
 /* DOWNLOAD QR */
 
 function downloadQR(){
@@ -1745,21 +1796,42 @@ function downloadQR(){
 let img =
 document.querySelector("#qrcode img");
 
-if(!img){
+let canvas =
+document.querySelector("#qrcode canvas");
+
+/* CHECK */
+
+if(!img && !canvas){
 
 alert("Generate QR First");
 return;
 
 }
 
-/* CREATE DOWNLOAD */
+/* DOWNLOAD */
 
 const a =
 document.createElement("a");
 
+/* IMAGE */
+
+if(img){
+
 a.href = img.src;
 
-a.download = "qr-code.png";
+}
+
+/* CANVAS */
+
+else{
+
+a.href =
+canvas.toDataURL();
+
+}
+
+a.download =
+"qr-code.png";
 
 document.body.appendChild(a);
 
